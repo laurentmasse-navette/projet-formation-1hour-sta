@@ -1,0 +1,25 @@
+---
+description: Staged, plan-first development workflow and the no-code-until-explicitly-allowed policy
+alwaysApply: true
+---
+# Development workflow
+This is a large, ambitious project. It is built in explicit stages, and each stage is planned
+with Cursor's Plan mode before any work starts.
+## No code until a code-generating stage
+- Do **not** write application code (source files, build scripts, tests, or code snippets meant to be committed)
+  unless the current stage or subtask is **explicitly labeled as code-generating**.
+- If it is unclear whether the current task allows code, assume it does not and ask.
+- Illustrative pseudocode or formulas inside planning documents are acceptable when they clarify a design decision.
+## Current phase: planning and harness setup
+The early sessions focus on:
+1. Building the project harness: Cursor rules, skills, and hooks.
+2. Gathering the format specification documents for the tool's textual interfaces
+   (Liberty, Verilog, SDC, SPEF, SDF, Tcl command set).
+3. Defining the code architecture: modules, data structures (timing graph, design database),
+   data flow, language and build choices.
+4. Laying out the staged roadmap, marking which stages and subtasks are code-generating.
+## Working in stages
+- Use Plan mode to scope each stage before executing it.
+- Each stage delivers the simplified version of its feature first (see the simplified-first principle
+  in the project overview rule); refinements are scheduled as later stages.
+- Keep plans and decisions written down in the repository so later sessions can build on them.

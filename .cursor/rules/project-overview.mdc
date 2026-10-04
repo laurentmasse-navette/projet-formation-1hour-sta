@@ -1,0 +1,32 @@
+---
+description: Project purpose — this repository is a clone of the Synopsys PrimeTime Static Timing Analysis (STA) tool
+alwaysApply: true
+---
+# Project overview
+This project is a clone of **Synopsys PrimeTime**, the gate-level **Static Timing Analysis (STA)** tool.
+It is not a streaming, TV, or consumer application.
+## Goal
+Reproduce the core PrimeTime workflow: read a design and its timing data, build a timing graph,
+propagate arrival and required times, and report timing (slack, critical paths, violations)
+through a PrimeTime-like Tcl command interface.
+## Simplified-first principle
+Every feature starts as a simplified, well-understood model and is refined in later stages.
+Do not jump to the elaborate production-grade algorithm before the simplified version exists and is validated.
+| Area | Initial model | Later refinements (not yet in scope) |
+|------|---------------|--------------------------------------|
+| Net (interconnect) delay | Elmore delay on RC trees | AWE, moment matching, effective capacitance (Ceff), CCS-style driver models |
+| Cell delay and slew | NLDM table lookup with interpolation | CCS / ECSM current-source models |
+Apply the same principle to any feature not listed: pick the simplest correct model first,
+and record the intended refinement path in the plan.
+## Textual interfaces in scope
+The tool's inputs and outputs are standard EDA text formats. Their specifications will be gathered
+during planning and are the reference for any parser or writer:
+- Liberty (`.lib`): cell timing and power libraries
+- Structural Verilog: gate-level netlists
+- SDC: timing constraints (clocks, I/O delays, exceptions)
+- SPEF: parasitics (RC networks used for net delay)
+- SDF: delay annotation (read and/or write)
+- Tcl: the PrimeTime-style command shell and scripts
+## Intellectual property
+Base behavior on public specifications and publicly documented command semantics.
+Do not copy proprietary Synopsys source code, documentation text, or trademarked material verbatim.

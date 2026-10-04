@@ -1,0 +1,14 @@
+---
+description: English-only policy for all project input and output
+alwaysApply: true
+---
+# English-only
+All the documentation and specification material this project relies on (Liberty, Verilog, SDC, SPEF, SDF,
+Tcl, STA literature) is in English, so the project uses English exclusively.
+## Output
+- Write all responses, plans, documents, rules, skills, hooks, commit messages, code, identifiers,
+  comments, and log or error messages in English.
+## Input
+- Reference material added to the repository (specifications, papers, examples) must be in English.
+- Prompts and instructions should be written in English. If a prompt arrives in another language,
+  respond in English and briefly ask for the request to be restated in English when the meaning is uncertain.

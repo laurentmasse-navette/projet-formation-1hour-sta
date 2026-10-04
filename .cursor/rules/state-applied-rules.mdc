@@ -1,0 +1,10 @@
+---
+description: Always state which rules were applied to produce a response
+alwaysApply: true
+---
+# State the applied rules
+At the end of every response, add a short **Rules applied** section that lists the rules that shaped the output.
+- Name each rule by its file name (for example `project-overview.mdc`) and add a brief note on how it influenced the response.
+- Include user rules and skills when they were used, labeled as such.
+- List only rules that actually affected the output, not every rule that was loaded.
+- If no rule beyond this one applied, say so.
