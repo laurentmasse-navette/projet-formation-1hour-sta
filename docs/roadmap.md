@@ -75,7 +75,8 @@ Decisions are recorded in [decisions/0000-language-and-build.md](decisions/0000-
 - Accepted: CMake presets with Ninja; GoogleTest via `FetchContent`; system Tcl 8.6 embedded through its C API.
 - Accepted: hand-written parsers; exceptions internally, Tcl errors at the shell boundary, project message IDs.
 - Coding conventions recorded as a Cursor rule.
-- Open: version control (D0.9), continuous integration (D0.10), license (D0.11).
+- Accepted: git on GitHub over SSH, trunk-based with squash-merged pull requests, LF line endings.
+- Open: continuous integration (D0.10), license (D0.11).
 
 ### 1. Test data and reference (Planning)
 

@@ -151,10 +151,36 @@ Status legend: **Accepted**, **Open**, **Superseded**.
   and a severity (info, warning, error).
 - A central message handler supports suppression and per-ID limits.
 
+## D0.9 Version control: git on GitHub, trunk-based with pull requests (Accepted, 2026-10-05)
+
+### Decision
+
+- Remote: **GitHub**, `git@github.com:laurentmasse-navette/projet-formation-1hour-sta.git`, accessed over **SSH**.
+  The former Windows-drive repository (`/mnt/j/...`) is no longer a remote.
+- Branching: **trunk-based**. `main` is always in a working state; all work happens on short-lived branches
+  merged through GitHub pull requests.
+- Branch names: `step-NN/<topic>` for roadmap step work (for example `step-04/liberty-reader`),
+  `docs/<topic>` and `fix/<topic>` for work outside a step. Lowercase, words separated by hyphens.
+- Commit messages: imperative subject line of at most 72 characters, optionally prefixed with the decision or
+  step (`D0.9: ...`, `Step 4: ...`); a blank line, then a body wrapped at 72 characters explaining why.
+- Merge strategy: **squash merge**, one commit on `main` per pull request; the pull request title follows the
+  commit subject rules.
+- Protection of `main`: pull requests required now; required CI status checks added once D0.10 is settled.
+- Line endings: `.gitattributes` with `* text=auto eol=lf`, so text files use LF on every platform.
+
+### Rationale
+
+- Pull requests give a review point for each change, including agent-generated ones, and a natural hook for CI.
+- Step-prefixed branch names tie history to the roadmap; squash merges keep `main` linear, one entry per change.
+- Enforcing LF avoids whole-file diffs when the repository is touched from Windows tools (CRLF conversion).
+
+### Follow-up actions
+
+- Enable branch protection (or a ruleset) on `main` in the GitHub repository settings: require a pull request
+  before merging; allow squash merging only.
+- Add required status checks once CI exists (D0.10).
+
 ## Open decisions
 
-- D0.9 Version control: git is in use; the WSL2 working copy is a clone whose `origin` is the former
-  Windows-drive repository (`/mnt/j/...`). To decide: the authoritative remote and hosting, and branch and
-  commit conventions.
 - D0.10 Continuous integration: platform, build matrix (GCC release build, Clang build, sanitizers), triggers.
 - D0.11 Project license, consistent with the intellectual property rule.
