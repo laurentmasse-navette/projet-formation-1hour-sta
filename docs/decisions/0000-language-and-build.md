@@ -87,8 +87,10 @@ Status legend: **Accepted**, **Open**, **Superseded**.
 
 ### Follow-up actions
 
-- Verify that a binary using `std::format` built with `gcc-toolset-14` links and runs on a stock AlmaLinux 8
-  without the toolset installed (newer `libstdc++` parts are linked statically).
+- Done (2026-10-05): a `std::format` / `std::span` probe built with `gcc-toolset-14` links only the system
+  `libstdc++` (GCC 8.5) and runs with the toolset absent from the environment. It requires at most
+  `GLIBCXX_3.4.21`, `CXXABI_1.3.9`, `GLIBC_2.26`; stock AlmaLinux 8 provides `GLIBCXX_3.4.25` and glibc 2.28.
+  Not yet repeated on a machine without the toolset installed (no container runtime available).
 
 ## D0.4 Build system: CMake presets with Ninja (Accepted, 2026-10-04)
 
@@ -138,7 +140,10 @@ Status legend: **Accepted**, **Open**, **Superseded**.
 
 ### Follow-up actions
 
-- Write the coding-conventions Cursor rule (naming, file names, header guards, include order).
+- Done (2026-10-05): `.cursor/rules/coding-conventions.mdc`, applied to C++ and CMake files. Choices:
+  Google-style naming (PascalCase types and functions, snake_case variables, trailing `_` members, `kName`
+  constants), PascalCase file names with `.hpp` / `.cpp`, `#pragma once`, 2-space indentation, 80 columns.
+- Write `.clang-format` and `.clang-tidy` matching the rule (with the first code-generating step).
 
 ## D0.8 Error and message policy (Accepted, 2026-10-04)
 
