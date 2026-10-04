@@ -103,8 +103,10 @@ Status legend: **Accepted**, **Open**, **Superseded**.
 
 ### Follow-up actions
 
-- `sudo dnf config-manager --set-enabled powertools && sudo dnf install ninja-build`.
-- Install sanitizer runtimes: `gcc-toolset-14-libasan-devel`, `gcc-toolset-14-libubsan-devel`.
+- Done (2026-10-05): PowerTools enabled; `ninja-build` 1.8.2, `gcc-toolset-14-libasan-devel` and
+  `gcc-toolset-14-libubsan-devel` installed. A CMake + Ninja + ASan/UBSan probe builds and reports errors.
+- Ninja 1.8.2 supports the single-configuration `Ninja` generator used by the presets, but not
+  `Ninja Multi-Config` (requires Ninja >= 1.10). Do not adopt multi-config presets without a newer Ninja.
 
 ## D0.5 Dependencies: system Tcl 8.6, GoogleTest (Accepted, 2026-10-04)
 
