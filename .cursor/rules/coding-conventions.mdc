@@ -1,0 +1,54 @@
+---
+description: C++20 and CMake coding conventions for the STA tool (naming, files, includes, errors)
+globs: **/*.hpp,**/*.cpp,**/CMakeLists.txt,**/*.cmake
+alwaysApply: false
+---
+
+# Coding conventions
+
+Source of the decisions: `docs/decisions/0000-language-and-build.md` (D0.3, D0.7, D0.8).
+
+## Naming
+
+| Element | Style | Example |
+|---|---|---|
+| Types, classes, structs, enums, type aliases | PascalCase | `TimingArc`, `PinDirection` |
+| Functions and methods | PascalCase | `FindPin()`, `ArrivalTime()` |
+| Variables and parameters | snake_case | `max_delay`, `load_pin` |
+| Data members | snake_case + trailing `_` | `arcs_`, `time_unit_` |
+| Constants and `enum class` values | `k` + PascalCase | `kMaxFanout`, `PinDirection::kInput` |
+| Namespaces | lowercase snake_case | `sta`, `sta::liberty` |
+| Macros (avoid) | UPPER_SNAKE_CASE with `STA_` prefix | `STA_ASSERT` |
+
+## Files
+
+- One main class per `.hpp` / `.cpp` pair, named after it in PascalCase: `TimingGraph.hpp`, `TimingGraph.cpp`.
+- Tests: `<Class>Test.cpp` under `tests/`, mirroring the `src/` layout.
+- Headers start with `#pragma once`.
+- Include order, one blank line between groups: the file's own header, C++ standard library,
+  third-party (`<tcl.h>`, `<gtest/gtest.h>`), project headers (`"liberty/LibertyReader.hpp"`, relative to `src/`).
+
+## Formatting
+
+- 2-space indentation, 80-column lines, opening braces on the same line.
+- `.clang-format` is the authority once it exists; do not hand-format against it.
+
+## C++ usage
+
+- C++20, no compiler extensions, no C++20 modules.
+- Ownership is explicit: `std::unique_ptr` for owners, references or raw pointers for non-owning access;
+  no naked `new` / `delete`.
+- Prefer `enum class`, `std::string_view` and `std::span` parameters, `const` correctness, `[[nodiscard]]`
+  on functions whose result must be checked.
+- Never `using namespace` in a header.
+
+## Errors and messages (D0.8)
+
+- Report errors by throwing the project exception types; never let an exception cross the Tcl C API.
+- Every user-visible message goes through the message handler with an ID such as `LIB-012`.
+
+## CMake
+
+- Target-based: `target_include_directories`, `target_link_libraries`, `target_compile_options`;
+  no global `include_directories` or `CMAKE_CXX_FLAGS` edits.
+- Lowercase command names.
