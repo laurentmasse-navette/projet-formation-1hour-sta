@@ -71,9 +71,11 @@ Steps 4 and 5 can proceed in parallel once 2 and 3 are done. Step 9 can proceed 
 
 Decisions are recorded in [decisions/0000-language-and-build.md](decisions/0000-language-and-build.md).
 
-- C++ (standard version to decide: C++17 or C++20), CMake, a unit test framework (GoogleTest or Catch2).
-- Tcl 8.6 embedded through its C API; dependency sourcing on Windows (vcpkg or MSYS2) and other platforms.
+- Accepted: Linux (AlmaLinux 8) under WSL2; C++20 with `gcc-toolset-14`, Clang 21 for CI and `clang-tidy`.
+- Accepted: CMake presets with Ninja; GoogleTest via `FetchContent`; system Tcl 8.6 embedded through its C API.
+- Accepted: hand-written parsers; exceptions internally, Tcl errors at the shell boundary, project message IDs.
 - Coding conventions recorded as a Cursor rule.
+- Open: version control (D0.9), continuous integration (D0.10), license (D0.11).
 
 ### 1. Test data and reference (Planning)
 

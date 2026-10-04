@@ -32,8 +32,9 @@ Status legend: **Accepted**, **Open**, **Superseded**.
 
 ### Follow-up actions
 
-- Install the WSL2 distribution chosen in D0.2 (`wsl --install -d AlmaLinux-8`).
-- Move the repository from the Windows drive into `~/projects/projet-formation-1hour-sta` and reopen it in Cursor via WSL.
+- Done: install the WSL2 distribution chosen in D0.2 (`wsl --install -d AlmaLinux-8`); AlmaLinux 8.10 is in use.
+- Done: move the repository from the Windows drive into `~/projects/projet-formation-1hour-sta` (by `git clone`)
+  and reopen it in Cursor via WSL.
 
 ## D0.2 Linux distribution: AlmaLinux 8 (Accepted, 2026-10-04)
 
@@ -69,11 +70,91 @@ Status legend: **Accepted**, **Open**, **Superseded**.
 | Ubuntu 24.04 / 26.04 LTS | Newer toolchain and packages, but not a typical EDA customer platform; binaries built on a newer glibc may not run on RHEL 8. Kept as an optional CI target. |
 | AlmaLinux 9 / Rocky 9 | Longer support window, but raises the minimum glibc to 2.34 and excludes RHEL 8 customers. Candidate for the next baseline. |
 
+## D0.3 C++ standard and compilers: C++20, gcc-toolset-14 (Accepted, 2026-10-04)
+
+### Decision
+
+- Language standard: **C++20** (`CMAKE_CXX_STANDARD 20`, extensions off). C++20 modules are not used.
+- Production compiler: **`gcc-toolset-14`** (GCC 14.2.1, already installed).
+- **Clang 21** (AppStream) is a secondary compiler used in CI and for `clang-tidy`; it is not a release compiler.
+
+### Rationale
+
+- GCC 14 implements the C++20 core language and library features the project needs: `std::span`, concepts,
+  ranges, `std::format`, designated initializers.
+- A second compiler catches non-portable code early, in line with D0.1.
+- `gcc-toolset-15` is available but offers nothing required; upgrading later is a low-risk change.
+
+### Follow-up actions
+
+- Verify that a binary using `std::format` built with `gcc-toolset-14` links and runs on a stock AlmaLinux 8
+  without the toolset installed (newer `libstdc++` parts are linked statically).
+
+## D0.4 Build system: CMake presets with Ninja (Accepted, 2026-10-04)
+
+### Decision
+
+- **CMake >= 3.26** (3.26.5 installed) with a committed `CMakePresets.json`.
+- Generator: **Ninja**, installed from the PowerTools repository (`ninja-build`).
+- Presets: `debug`, `release`, `relwithdebinfo`, `asan-ubsan`.
+- Warnings: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`; `-Werror` enabled in CI only.
+
+### Follow-up actions
+
+- `sudo dnf config-manager --set-enabled powertools && sudo dnf install ninja-build`.
+- Install sanitizer runtimes: `gcc-toolset-14-libasan-devel`, `gcc-toolset-14-libubsan-devel`.
+
+## D0.5 Dependencies: system Tcl 8.6, GoogleTest (Accepted, 2026-10-04)
+
+### Decision
+
+- **Tcl 8.6** from the system `tcl-devel` package (8.6.8 installed), located with `find_package(TCL)`.
+  Tcl 9 is not supported (its C API differs); migration is a later decision.
+- Unit tests: **GoogleTest**, fetched with CMake `FetchContent` at a pinned release tag (EPEL is not enabled).
+- No other third-party libraries for milestone 1. Any addition requires a new decision entry.
+
+## D0.6 Parser strategy: hand-written (Accepted, 2026-10-04)
+
+### Decision
+
+- Each format (Liberty, Verilog, SDF, later SPEF) has a **hand-written lexer and recursive-descent parser**.
+- SDC is not parsed: it is executed as Tcl commands by the shell.
+
+### Rationale
+
+- Liberty, SDF, and SPEF have simple, regular grammars; the structural Verilog subset is small.
+- No generator build dependency (flex/bison), precise error messages with file and line, and easier
+  incremental subset growth.
+
+## D0.7 Repository layout and conventions (Accepted, 2026-10-04)
+
+### Decision
+
+- Scope: top-level layout and coding conventions only. The module tree inside `src/` is decided in roadmap step 2.
+- Top-level directories: `src/`, `tests/`, `testdata/`, `docs/`, `cmake/`.
+- Root C++ namespace `sta`, with one nested namespace per module (finalized in step 2).
+- Formatting and linting: committed `.clang-format` and `.clang-tidy` (Clang 21 tools).
+- The detailed naming and style rules are recorded as a Cursor rule (coding conventions).
+
+### Follow-up actions
+
+- Write the coding-conventions Cursor rule (naming, file names, header guards, include order).
+
+## D0.8 Error and message policy (Accepted, 2026-10-04)
+
+### Decision
+
+- Inside readers and the core, errors are reported with **exceptions** (a project exception hierarchy).
+- At the Tcl command boundary, exceptions are caught and converted to **Tcl errors** (`TCL_ERROR` with a message);
+  no exception crosses the Tcl C API.
+- Every user-visible message has a **project-specific ID** (`<AREA>-<NNN>`, for example `LIB-012`, `SDF-003`)
+  and a severity (info, warning, error).
+- A central message handler supports suppression and per-ID limits.
+
 ## Open decisions
 
-- D0.3 C++ standard (C++17 or C++20) and `gcc-toolset` version; whether Clang is also supported.
-- D0.4 Build system details (CMake presets, Ninja, warning levels, sanitizer builds, configurations).
-- D0.5 Dependencies: Tcl 8.6 sourcing and version pinning, unit test framework, any other libraries.
-- D0.6 Parser strategy (hand-written recursive descent or generator).
-- D0.7 Repository layout, naming, namespaces, formatting and linting configuration.
-- D0.8 Error and message policy (message IDs, exceptions or error codes at module boundaries).
+- D0.9 Version control: git is in use; the WSL2 working copy is a clone whose `origin` is the former
+  Windows-drive repository (`/mnt/j/...`). To decide: the authoritative remote and hosting, and branch and
+  commit conventions.
+- D0.10 Continuous integration: platform, build matrix (GCC release build, Clang build, sanitizers), triggers.
+- D0.11 Project license, consistent with the intellectual property rule.
